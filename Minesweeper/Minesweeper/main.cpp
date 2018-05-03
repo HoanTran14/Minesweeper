@@ -23,20 +23,21 @@ int main()
 			if (event.type == sf::Event::Closed)     window.close();
 
 
-			if (event.type==sf::Event::LostFocus)    checkwindowselected = false;
+			if (event.type == sf::Event::LostFocus)    checkwindowselected = false;
 			if (event.type == sf::Event::GainedFocus)    checkwindowselected = true;
-			
+
 		}
 		if (checkwindowselected) {
 			window.setMouseCursorVisible(false);//invisiable mouse
 			window.clear();
 			game.update();
 			game.draw();
-			
+
 		}
 		else {
 			window.setMouseCursorVisible(true);
 		}
 		window.display();
+	}
 	return 0;
 }
