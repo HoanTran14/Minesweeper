@@ -5,10 +5,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Player.h"
+#include "Item.h"
+#include <list>
 class GamePlay
 {
 		private: sf::RenderWindow*   mWindow;
-
+				 Player* mPlayer;
+				 std::list<Item> mItem;
 		public: GamePlay(sf::RenderWindow* window);
 				Player* mPlayer;
 		void  update();

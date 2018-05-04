@@ -7,14 +7,9 @@ using namespace std;
 int main()
 {
 	bool checkwindowselected = true;
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper!",sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(600, 320), "Minesweeper!",sf::Style::Close);
 	window.setFramerateLimit(60);//FPS
 	GamePlay game(&window);
-
-
-	
-
-
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -29,7 +24,7 @@ int main()
 		}
 		if (checkwindowselected) {
 			window.setMouseCursorVisible(false);//invisiable mouse
-			window.clear();
+			window.clear(sf::Color(53,199,255));
 			game.update();
 			game.draw();
 

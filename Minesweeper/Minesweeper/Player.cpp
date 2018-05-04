@@ -7,34 +7,40 @@ Player::Player(sf::RenderWindow* window) {
 	
 
 
-	this->mTextture.loadFromFile("Assets/drawable/1.png");
+	this->mTextture.loadFromFile("Assets/drawable/main.png");
 
 	this->mTextture.setSmooth(true);// khu rang cua
 	this->mSprite.setTexture(this->mTextture);
 	this->mSprite.setOrigin(this->mTextture.getSize().x / 2, this->mTextture.getSize().y / 2);
+	this->mSprite.setPosition(40, 40);
 }
 void Player::update() {
-	sf::Vector2i mouse_pos = sf::Mouse::getPosition(*this->mWindow);
-	if (mouse_pos.x <= 0) {
-		mouse_pos.x = 0;
-	}
-	if (mouse_pos.y <= 0) {
-		mouse_pos.y = 0;
-	}
-	if (mouse_pos.x > 800) {
-		mouse_pos.x = 800;
-	}
-	if (mouse_pos.y > 600) {
-		mouse_pos.y = 600;
-	}
+
+	sf::Vector2f main_position = this->mSprite.getPosition();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
 
 
-	this->mSprite.setPosition(mouse_pos.x, mouse_pos.y);
+		main_position.y -= 10;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
 
+
+		main_position.y += 10;
+	}
+
+	if (main_position.y <= 40) {
+		main_position.y = 40;
+	}
+	if (main_position.y >= 280) {
+		main_position.y = 280;
+	}
+	this->mSprite.setPosition(main_position.x, main_position.y);
 
 }
 
 void Player::draw() {
 	this->mWindow->draw(this->mSprite);
 }
-
+sf::Vector2f Player::getPostion() {
+	return this->mSprite.getPosition();
+}

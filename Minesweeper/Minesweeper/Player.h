@@ -15,6 +15,7 @@ class Player
 	public:Player(sf::RenderWindow* window);
 	 void update();
 	 void draw();
+	 sf::Vector2f getPostion();
 
 
 };
