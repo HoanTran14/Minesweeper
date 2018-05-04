@@ -4,18 +4,26 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Player.h"
-#include "Item.h"
+#include "Node.h"
 #include <list>
+#include <string>
+using namespace std;
 class GamePlay
 {
+	
+	
 		private: sf::RenderWindow*   mWindow;
-				 Player* mPlayer;
-				 std::list<Item> mItem;
+				 sf::Texture Node9, Node0, Node1, Node2, Node3, Node4, Node5, Node6, Node7, Node8, simle, Flag, Mine;
+				 const string PathImage = "Assets/drawable/";
+				 sf::Sprite Simle;
+				 Node node[12][8];
 		public: GamePlay(sf::RenderWindow* window);
-				Player* mPlayer;
+				
 		void  update();
 		void draw();
+		
+
+		void start();
 
 	
 };
