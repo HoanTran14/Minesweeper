@@ -8,11 +8,69 @@ GamePlay::GamePlay(sf::RenderWindow* window)
 	background.loadFromFile("Assets/drawable/Backgrounds/Play_Background.png");
 	sf::Sprite Background(background);
 
-	this->start();
+	this->setup();
 
 		
+
+
+
+
+	while (!Keyboard::isKeyPressed(Keyboard::Space))
+	{
+		Event event;
+		while (this->mWindow->pollEvent(event))
+		{
+			if (event.type == Event::Closed) this->mWindow->close();
+		}
+		this->mWindow->clear();
+		this->mWindow->draw(Background);
+		this->mWindow->display();
+	}
+
+	while (this->mWindow->isOpen())
+	{
+		Event event;
+		while (this->mWindow->pollEvent(event))
+		{
+			if (event.type == Event::Closed) this->mWindow->close();
+		}
+		this->mWindow->clear();
+		this->mWindow->draw(Background);
+
+		
+		for (int i = 1; i <= m; i++)
+			for (int j = 1; j <= n; j++)
+			{
+				this->mWindow->draw(node[i][j].LastLayer);
+			}
+		for (int i = 1; i <= m; i++)
+			for (int j = 1; j <= n; j++)
+			{
+				if (!node[i][j].lat)this->mWindow->draw(node[i][j].FirstLayer);
+			}
+		this->mWindow->display();
+	}
+
+	while (this->mWindow->isOpen())
+	{
+		Event event;
+		while (this->mWindow->pollEvent(event))
+		{
+			if (event.type == Event::Closed)this->mWindow->close();
+		}
+		this->mWindow->clear();
+		this->mWindow->draw(Background);
+	
+		for (int i = 1; i <= m; i++)
+			for (int j = 1; j <= 6; j++)
+			{
+				this->mWindow->draw(node[i][j].LastLayer);
+			}
+		this->mWindow->display();
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) break;
+			}
 }
-void GamePlay::start() {
+void GamePlay::setup() {
 	
 	this->Node9.loadFromFile(PathImage + "Play/Node.png");
 	this->Node0.loadFromFile(PathImage + "Play/0.png");
@@ -25,22 +83,17 @@ void GamePlay::start() {
 	this->Node7.loadFromFile(PathImage + "Play/7.png");
 	this->Node8.loadFromFile(PathImage + "Play/8.png");
 
-	this->simle.loadFromFile(PathImage + "Play/ClickSmile.png");
-	this->Flag.loadFromFile(PathImage + "Play/Flag.png");
-
+	
 	this->Mine.loadFromFile(PathImage + "Play/Mine.png");
 
 	
 
-	this->Simle.setTexture(this->simle);
-	this->Simle.setOrigin(16, 16);
-	this->Simle.setPosition(200, 50);
 
 
 
 
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < (m+2); i++)
 	{
 		node[i][0].kinds = 0;
 		node[i][11].kinds = 0;
@@ -52,7 +105,7 @@ void GamePlay::start() {
 		node[7][j].kinds = 0;
 	}
 
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= m; i++)
 		for (int j = 1; j <= 6; j++)
 			if ((rand() % 5 - 3) == -1)
 			{
@@ -64,7 +117,7 @@ void GamePlay::start() {
 				node[i][j].LastLayer.setTexture(Node0);
 			}
 
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= m; i++)
 				for (int j = 1; j <= 6; j++)
 				{
 					node[i][j].setData(Node9);
@@ -74,7 +127,7 @@ void GamePlay::start() {
 					node[i][j].LastLayer.setPosition(node[i][j].x, node[i][j].y);
 					if (node[i][j].kinds == NULL)
 					{
-						if ((i >= 1) && (i <= 10) && (j >= 1) && (j <= 6))
+						if ((i >= 1) && (i <= m) && (j >= 1) && (j <= 6))
 						{
 							int count = 0;
 							if (node[i - 1][j].kinds == -1)count++;
@@ -121,6 +174,14 @@ void GamePlay::start() {
 				}
 
 	
+
+
+
+
+
+
+
+
 }
 
 void GamePlay::update() {
