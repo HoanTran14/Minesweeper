@@ -4,9 +4,8 @@
 #include "GamePlay.h"
 using namespace std;
 
-
 const string PathImage = "Assets/drawable/";
-const string PathFont = "Assets/Fonts/Turok.ttf";
+
 void Menu(sf::RenderWindow &window);
 int main()
 {

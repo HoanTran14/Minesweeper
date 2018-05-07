@@ -3,87 +3,115 @@
 
 GamePlay::GamePlay(sf::RenderWindow* window)
 {
+	start = false;
+	this->countBoom = 0;
+	this->countLat = 0;
 	this->mWindow = window;
 	this->mWindow->setSize(Vector2u(m * 32, n * 32));
-
-
 
 	FloatRect visible(0, 0, m * 32, n * 32);
 	this->mWindow->setView(View(visible));
 	this->setup();
 
-	this->mWindow->clear();
-
-	this->mWindow->display();
+	
 
 
-
-
-
-	cout << "321321";
+	cout << "start";
 	while (this->mWindow->isOpen())
 	{
 		Event event;
-		cout << "event";
-		while (this->mWindow->pollEvent(event))
-		{
-			if (event.type == Event::Closed) this->mWindow->close();
-		}
-		this->mWindow->clear();
-
-
-
-		if (Mouse::isButtonPressed(Mouse::Left))
-		{
+		if (!start) { 
 			
-			sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
-			int x = mouse_position.x / 32+1;
-			int y = mouse_position.y / 32+1;
-			cout << "CLick left"<<x<<y;
-			if (x <= m && y <= n && x >= 1 && y >= 1)
+			start = true;
+			 }
+		else {
+			while (this->mWindow->pollEvent(event))
 			{
-				node[x][y].lat = true;
-
+				if (event.type == Event::Closed) this->mWindow->close();
 			}
-			if (Mouse::isButtonPressed(Mouse::Right))
+			this->mWindow->clear();
+
+
+
+			if (Mouse::isButtonPressed(Mouse::Left))
 			{
-				cout << "click rignht" << x << y;;
+
 				sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
-				int x = mouse_position.x / 32+1;
-				int y = mouse_position.y / 32+1;
+				int x = mouse_position.x / 32 + 1;
+				int y = mouse_position.y / 32 + 1;
+				cout << "CLick left" << x << y << endl;
 				if (x <= m && y <= n && x >= 1 && y >= 1)
 				{
-					if (node[x][y].flag == false)
+					if (node[x][y].kinds == -1)
 					{
-						node[x][y].FirstLayer.setTexture(Flag);
-						node[x][y].flag = true;
-						//cout << "Flag";
+						this->stop();
+						break;
 					}
-					else
+					if (!node[x][y].lat)
 					{
-						node[x][y].FirstLayer.setTexture(Node9);
-						node[x][y].flag = false;
+						countLat++;
 					}
+					node[x][y].lat = true;
+					cout << "bom:" << countBoom << "   " << countLat << "   " << m*n << endl;
+					if ((this->countBoom + this->countLat) == m*n) {
+
+						win();
+						break;
+					}
+
+
 				}
 			}
+			if (Mouse::isButtonPressed(Mouse::Right))
+				{
+					
+					sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
+					int x = mouse_position.x / 32 + 1;
+					int y = mouse_position.y / 32 + 1;
+					cout << "click rignht" << x << y << endl;;
+					if (x <= m && y <= n && x >= 1 && y >= 1)
+					{
+						if (node[x][y].flag == false)
+						{
+							node[x][y].FirstLayer.setTexture(Flag);
+							node[x][y].flag = true;
+							//cout << "Flag";
+						}
+						else
+						{
+							node[x][y].FirstLayer.setTexture(Node9);
+							node[x][y].flag = false;
+						}
+					}
+
+					
+				}
 
 
-			for (int i = 1; i <= m; i++)
-				for (int j = 1; j <= n; j++)
-				{
-					this->mWindow->draw(node[i][j].LastLayer);
-				}
-			for (int i = 1; i <= m; i++)
-				for (int j = 1; j <= n; j++)
-				{
-					if (!node[i][j].lat)this->mWindow->draw(node[i][j].FirstLayer);
-				}
-			this->mWindow->display();
+				for (int i = 1; i <= m; i++)
+					for (int j = 1; j <= n; j++)
+					{
+						this->mWindow->draw(node[i][j].LastLayer);
+					}
+				for (int i = 1; i <= m; i++)
+					for (int j = 1; j <= n; j++)
+					{
+						if (!node[i][j].lat)this->mWindow->draw(node[i][j].FirstLayer);
+					}
+				this->mWindow->display();
+			}
+
 		}
+
+	
 
 		
 	}
 
+	
+
+
+void GamePlay::stop() {
 	while (this->mWindow->isOpen())
 	{
 		Event event;
@@ -103,6 +131,24 @@ GamePlay::GamePlay(sf::RenderWindow* window)
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) break;
 	}
 }
+void GamePlay::win() {
+	this->mWindow->clear();
+	sf::Sprite win;
+	win.setTexture(this->Win);
+
+
+
+	sf::Vector2f targetSize(900.0f, 1200.0f);
+
+	win.setScale(
+		targetSize.x / win.getLocalBounds().width,
+		targetSize.y / win.getLocalBounds().height);
+
+
+	this->mWindow->clear();
+	this->mWindow->draw(win);
+	
+}
 void GamePlay::setup() {
 	
 	this->Node9.loadFromFile(PathImage + "Play/Node.png");
@@ -116,26 +162,37 @@ void GamePlay::setup() {
 	this->Node7.loadFromFile(PathImage + "Play/7.png");
 	this->Node8.loadFromFile(PathImage + "Play/8.png");
 
-	
+
 	this->Mine.loadFromFile(PathImage + "Play/Mine.png");
+	this->Win.loadFromFile(PathImage + "Play/win.png");
+	this->Flag.loadFromFile(PathImage + "Play/Flag.png");
 
-	
+	this->Node9.setSmooth(true);
+	this->Node0.setSmooth(true);
+	this->Node1.setSmooth(true);
+	this->Node2.setSmooth(true);
+	this->Node3.setSmooth(true);
+	this->Node4.setSmooth(true);
+	this->Node5.setSmooth(true);
+	this->Node6.setSmooth(true);
+	this->Node7.setSmooth(true);
+	this->Node8.setSmooth(true);
 
-
-
-
+	this->Mine.setSmooth(true);
+	this->Win.setSmooth(true);
+	this->Flag.setSmooth(true);
 
 
 	for (int i = 0; i < (m+2); i++)
 	{
 		node[i][0].kinds = 0;
-		node[i][11].kinds = 0;
+		node[i][n+1].kinds = 0;
 	}
 
 	for (int j = 0; j < (n+2); j++)
 	{
 		node[0][j].kinds = 0;
-		node[7][j].kinds = 0;
+		node[m+1][j].kinds = 0;
 	}
 
 	for (int i = 1; i <= m; i++)
@@ -143,7 +200,9 @@ void GamePlay::setup() {
 			if ((rand() % 5 - 3) == -1)
 			{
 				node[i][j].kinds = -1;
+				countBoom++;
 				node[i][j].LastLayer.setTexture(Mine);
+			
 			}
 			else {
 				node[i][j].kinds = NULL;
@@ -160,7 +219,7 @@ void GamePlay::setup() {
 					node[i][j].LastLayer.setPosition(node[i][j].x, node[i][j].y);
 					if (node[i][j].kinds == NULL)
 					{
-						if ((i >= 1) && (i <= m) && (j >= 1) && (j <= 6))
+						if ((i >= 1) && (i <= m) && (j >= 1) && (j <= n))
 						{
 							int count = 0;
 							if (node[i - 1][j].kinds == -1)count++;
