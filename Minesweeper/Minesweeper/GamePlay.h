@@ -28,9 +28,8 @@ class GamePlay
 				 bool keyUp;
 		public: GamePlay(sf::RenderWindow* window);
 				
-		void  update();
-		void draw();
-		
+	
+		void play();
 		void stop();
 		void win();
 		void setup();

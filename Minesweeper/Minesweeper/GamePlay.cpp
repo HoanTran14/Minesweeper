@@ -3,160 +3,14 @@
 
 GamePlay::GamePlay(sf::RenderWindow* window)
 {
-	start = false;
-	keyUp = false;
-	this->countBoom = 0;
-	this->countLat = 0;
+	
 	this->mWindow = window;
 	this->mWindow->setSize(Vector2u(m * 32, n * 32));
 
 	FloatRect visible(0, 0, m * 32, n * 32);
 	this->mWindow->setView(View(visible));
 	this->setup();
-
-	
-
-	this->mWindow->clear();
-	this->mWindow->display();
-
-	this->mWindow->draw(node[3][3].FirstLayer);
-
-	
-	this->mWindow->display();
-	
-	Texture SpacetoCtn;
-	SpacetoCtn.loadFromFile(PathImage + "Play/Space.png");
-
-	Sprite spaceCtn(SpacetoCtn);
-	spaceCtn.setOrigin(SpacetoCtn.getSize().x / 2, SpacetoCtn.getSize().y / 2);
-	spaceCtn.setPosition(m * 16, n * 16);
-	while (!Keyboard::isKeyPressed(Keyboard::Space))
-	{
-		Event event;
-		while (this->mWindow->pollEvent(event))
-		{
-			if (event.type == Event::Closed) this->mWindow->close();
-		}
-		this->mWindow->clear();
-		this->mWindow->draw(spaceCtn);
-		this->mWindow->display();
-	}
-
-
-
-
-	cout << "start";
-	while (this->mWindow->isOpen())
-	{
-		Event event;
-		if (!start) { 
-			
-			start = true;
-			 }
-		else {
-			while (this->mWindow->pollEvent(event))
-			{
-				if (event.type == Event::Closed) this->mWindow->close();
-			}
-			this->mWindow->clear();
-
-
-			
-
-
-
-
-			
-			if (Mouse::isButtonPressed(Mouse::Left))
-			{
-
-				sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
-				int x = mouse_position.x / 32 + 1;
-				int y = mouse_position.y / 32 + 1;
-				cout << "CLick left" << x << y << endl;
-				if (x <= m && y <= n && x >= 1 && y >= 1)
-				{
-					if (!node[x][y].flag)
-					{
-						if (node[x][y].kinds == -1)
-						{
-							this->stop();
-							break;
-						}
-						if (!node[x][y].lat)
-						{
-							countLat++;
-						}
-						node[x][y].lat = true;
-						cout << "bom:" << countBoom << "   " << countLat << "   " << m*n << endl;
-						if ((this->countBoom + this->countLat) == m*n) {
-
-							win();
-							break;
-						}
-					}
-					
-				
-
-
-				}
-			}
-		
-			if (Mouse::isButtonPressed(Mouse::Right))
-				{
-				cout << "2222222";
-				keyUp = true;
-					
-
-					
-				}
-			if (event.type == sf::Event::MouseButtonReleased)
-			{
-				cout << "11111";
-				if (event.mouseButton.button == sf::Mouse::Right) {
-					cout << "333333333";
-					if (keyUp) {
-						keyUp = false;
-						sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
-						int x = mouse_position.x / 32 + 1;
-						int y = mouse_position.y / 32 + 1;
-						cout << "click rignht" << x << y << endl;;
-						if (x <= m && y <= n && x >= 1 && y >= 1)
-						{
-							if (node[x][y].flag == false)
-							{
-								node[x][y].FirstLayer.setTexture(Flag);
-								node[x][y].flag = true;
-								//cout << "Flag";
-							}
-							else
-							{
-								node[x][y].FirstLayer.setTexture(Node9);
-								node[x][y].flag = false;
-							}
-						}
-					}
-				}
-			}
-
-				for (int i = 1; i <= m; i++)
-					for (int j = 1; j <= n; j++)
-					{
-						this->mWindow->draw(node[i][j].LastLayer);
-					}
-				for (int i = 1; i <= m; i++)
-					for (int j = 1; j <= n; j++)
-					{
-						if (!node[i][j].lat)this->mWindow->draw(node[i][j].FirstLayer);
-					}
-				this->mWindow->display();
-			}
-
-		}
-
-	
-
-		
+	this->play();
 	}
 
 	
@@ -217,7 +71,10 @@ void GamePlay::win() {
 	
 }
 void GamePlay::setup() {
-	
+	start = false;
+	keyUp = false;
+	this->countBoom = 0;
+	this->countLat = 0;
 	this->Node9.loadFromFile(PathImage + "Play/Node.png");
 	this->Node0.loadFromFile(PathImage + "Play/0.png");
 	this->Node1.loadFromFile(PathImage + "Play/1.png");
@@ -228,8 +85,6 @@ void GamePlay::setup() {
 	this->Node6.loadFromFile(PathImage + "Play/6.png");
 	this->Node7.loadFromFile(PathImage + "Play/7.png");
 	this->Node8.loadFromFile(PathImage + "Play/8.png");
-
-
 	this->Mine.loadFromFile(PathImage + "Play/Mine.png");
 	this->Win.loadFromFile(PathImage + "Play/Win.png");
 	this->Flag.loadFromFile(PathImage + "Play/Flag.png");
@@ -323,24 +178,146 @@ void GamePlay::setup() {
 				}
 
 	
-
-
-
-
-
-
-
-
 }
 
-void GamePlay::update() {
-	
-	
-}
+void GamePlay::play() {
+
+	this->mWindow->clear();
+	this->mWindow->display();
+
+	this->mWindow->draw(node[3][3].FirstLayer);
+
+
+	this->mWindow->display();
+
+	Texture SpacetoCtn;
+	SpacetoCtn.loadFromFile(PathImage + "Play/Space.png");
+
+	Sprite spaceCtn(SpacetoCtn);
+	spaceCtn.setOrigin(SpacetoCtn.getSize().x / 2, SpacetoCtn.getSize().y / 2);
+	spaceCtn.setPosition(m * 16, n * 16);
+	while (!Keyboard::isKeyPressed(Keyboard::Space))
+	{
+		Event event;
+		while (this->mWindow->pollEvent(event))
+		{
+			if (event.type == Event::Closed) this->mWindow->close();
+		}
+		this->mWindow->clear();
+		this->mWindow->draw(spaceCtn);
+		this->mWindow->display();
+	}
 
 
 
-void GamePlay::draw() {
-	
-	
+
+	cout << "start";
+	while (this->mWindow->isOpen())
+	{
+		Event event;
+		if (!start) {
+
+			start = true;
+		}
+		else {
+			while (this->mWindow->pollEvent(event))
+			{
+				if (event.type == Event::Closed) this->mWindow->close();
+			}
+			this->mWindow->clear();
+
+
+
+
+
+
+
+
+			if (Mouse::isButtonPressed(Mouse::Left))
+			{
+
+				sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
+				int x = mouse_position.x / 32 + 1;
+				int y = mouse_position.y / 32 + 1;
+				cout << "CLick left" << x << y << endl;
+				if (x <= m && y <= n && x >= 1 && y >= 1)
+				{
+					if (!node[x][y].flag)
+					{
+						if (node[x][y].kinds == -1)
+						{
+							this->stop();
+							break;
+						}
+						if (!node[x][y].lat)
+						{
+							countLat++;
+						}
+						node[x][y].lat = true;
+						cout << "bom:" << countBoom << "   " << countLat << "   " << m*n << endl;
+						if ((this->countBoom + this->countLat) == m*n) {
+
+							win();
+							break;
+						}
+					}
+
+
+
+
+				}
+			}
+
+			if (Mouse::isButtonPressed(Mouse::Right))
+			{
+				cout << "2222222";
+				keyUp = true;
+
+
+
+			}
+			if (event.type == sf::Event::MouseButtonReleased)
+			{
+				cout << "11111";
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					cout << "333333333";
+					if (keyUp) {
+						keyUp = false;
+						sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
+						int x = mouse_position.x / 32 + 1;
+						int y = mouse_position.y / 32 + 1;
+						cout << "click rignht" << x << y << endl;;
+						if (x <= m && y <= n && x >= 1 && y >= 1)
+						{
+							if (node[x][y].flag == false)
+							{
+								node[x][y].FirstLayer.setTexture(Flag);
+								node[x][y].flag = true;
+								//cout << "Flag";
+							}
+							else
+							{
+								node[x][y].FirstLayer.setTexture(Node9);
+								node[x][y].flag = false;
+							}
+						}
+					}
+				}
+			}
+
+			for (int i = 1; i <= m; i++)
+				for (int j = 1; j <= n; j++)
+				{
+					this->mWindow->draw(node[i][j].LastLayer);
+				}
+			for (int i = 1; i <= m; i++)
+				for (int j = 1; j <= n; j++)
+				{
+					if (!node[i][j].lat)this->mWindow->draw(node[i][j].FirstLayer);
+				}
+			this->mWindow->display();
+		}
+
+	}
+
 }
