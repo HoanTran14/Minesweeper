@@ -5,8 +5,8 @@
 
 
 
-const int M = 3;
-const int N = 3;
+const int M = 10;
+const int N = 10;
 const int MAIN_H = 340;
 const int MAIN_W = 400;
 

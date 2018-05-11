@@ -76,22 +76,27 @@ GamePlay::GamePlay(sf::RenderWindow* window)
 				cout << "CLick left" << x << y << endl;
 				if (x <= m && y <= n && x >= 1 && y >= 1)
 				{
-					if (node[x][y].kinds == -1)
+					if (!node[x][y].flag)
 					{
-						this->stop();
-						break;
-					}
-					if (!node[x][y].lat)
-					{
-						countLat++;
-					}
-					node[x][y].lat = true;
-					cout << "bom:" << countBoom << "   " << countLat << "   " << m*n << endl;
-					if ((this->countBoom + this->countLat) == m*n) {
+						if (node[x][y].kinds == -1)
+						{
+							this->stop();
+							break;
+						}
+						if (!node[x][y].lat)
+						{
+							countLat++;
+						}
+						node[x][y].lat = true;
+						cout << "bom:" << countBoom << "   " << countLat << "   " << m*n << endl;
+						if ((this->countBoom + this->countLat) == m*n) {
 
-						win();
-						break;
+							win();
+							break;
+						}
 					}
+					
+				
 
 
 				}
@@ -174,7 +179,13 @@ void GamePlay::stop() {
 				this->mWindow->draw(node[i][j].LastLayer);
 			}
 		this->mWindow->display();
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) break;
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) { 
+			
+			this->mWindow->setSize(Vector2u(MAIN_W, MAIN_H));
+
+			FloatRect visible(0, 0, MAIN_W, MAIN_H);
+			this->mWindow->setView(View(visible));
+			break; }
 	}
 }
 void GamePlay::win() {
@@ -203,22 +214,6 @@ void GamePlay::win() {
 		this->mWindow->display();
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) break;
 	}
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
-
-
 	
 }
 void GamePlay::setup() {
