@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include "GamePlay.h"
+#include "Common_f.h"
 using namespace std;
 
 const string PathImage = "Assets/drawable/";
@@ -10,7 +11,7 @@ void Menu(sf::RenderWindow &window);
 int main()
 {
 	bool checkwindowselected = true;
-	sf::RenderWindow window(sf::VideoMode(400, 340), "Minesweeper!",sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(MAIN_W, MAIN_H), "Minesweeper!",sf::Style::Close);
 	window.setFramerateLimit(30);//FPS
 	srand(time(NULL));
 	

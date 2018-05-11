@@ -4,6 +4,7 @@
 GamePlay::GamePlay(sf::RenderWindow* window)
 {
 	start = false;
+	keyUp = false;
 	this->countBoom = 0;
 	this->countLat = 0;
 	this->mWindow = window;
@@ -14,6 +15,34 @@ GamePlay::GamePlay(sf::RenderWindow* window)
 	this->setup();
 
 	
+
+	this->mWindow->clear();
+	this->mWindow->display();
+
+	this->mWindow->draw(node[3][3].FirstLayer);
+
+	
+	this->mWindow->display();
+	
+	Texture SpacetoCtn;
+	SpacetoCtn.loadFromFile(PathImage + "Play/Space.png");
+
+	Sprite spaceCtn(SpacetoCtn);
+	spaceCtn.setOrigin(SpacetoCtn.getSize().x / 2, SpacetoCtn.getSize().y / 2);
+	spaceCtn.setPosition(m * 16, n * 16);
+	while (!Keyboard::isKeyPressed(Keyboard::Space))
+	{
+		Event event;
+		while (this->mWindow->pollEvent(event))
+		{
+			if (event.type == Event::Closed) this->mWindow->close();
+		}
+		this->mWindow->clear();
+		this->mWindow->draw(spaceCtn);
+		this->mWindow->display();
+	}
+
+
 
 
 	cout << "start";
@@ -32,7 +61,12 @@ GamePlay::GamePlay(sf::RenderWindow* window)
 			this->mWindow->clear();
 
 
+			
 
+
+
+
+			
 			if (Mouse::isButtonPressed(Mouse::Left))
 			{
 
@@ -62,31 +96,43 @@ GamePlay::GamePlay(sf::RenderWindow* window)
 
 				}
 			}
+		
 			if (Mouse::isButtonPressed(Mouse::Right))
 				{
+				cout << "2222222";
+				keyUp = true;
 					
-					sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
-					int x = mouse_position.x / 32 + 1;
-					int y = mouse_position.y / 32 + 1;
-					cout << "click rignht" << x << y << endl;;
-					if (x <= m && y <= n && x >= 1 && y >= 1)
-					{
-						if (node[x][y].flag == false)
-						{
-							node[x][y].FirstLayer.setTexture(Flag);
-							node[x][y].flag = true;
-							//cout << "Flag";
-						}
-						else
-						{
-							node[x][y].FirstLayer.setTexture(Node9);
-							node[x][y].flag = false;
-						}
-					}
 
 					
 				}
-
+			if (event.type == sf::Event::MouseButtonReleased)
+			{
+				cout << "11111";
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					cout << "333333333";
+					if (keyUp) {
+						keyUp = false;
+						sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
+						int x = mouse_position.x / 32 + 1;
+						int y = mouse_position.y / 32 + 1;
+						cout << "click rignht" << x << y << endl;;
+						if (x <= m && y <= n && x >= 1 && y >= 1)
+						{
+							if (node[x][y].flag == false)
+							{
+								node[x][y].FirstLayer.setTexture(Flag);
+								node[x][y].flag = true;
+								//cout << "Flag";
+							}
+							else
+							{
+								node[x][y].FirstLayer.setTexture(Node9);
+								node[x][y].flag = false;
+							}
+						}
+					}
+				}
+			}
 
 				for (int i = 1; i <= m; i++)
 					for (int j = 1; j <= n; j++)
@@ -132,21 +178,47 @@ void GamePlay::stop() {
 	}
 }
 void GamePlay::win() {
-	this->mWindow->clear();
-	sf::Sprite win;
-	win.setTexture(this->Win);
+	this->mWindow->setSize(Vector2u(MAIN_W, MAIN_H));
+
+	FloatRect visible(0, 0, MAIN_W, MAIN_H);
+	this->mWindow->setView(View(visible));
+	Texture textureWin;
+	textureWin.loadFromFile(PathImage + "Play/Win.png");
+
+	Sprite win(textureWin);
+	win.setOrigin(textureWin.getSize().x / 2, textureWin.getSize().y / 2);
+	win.setPosition(MAIN_W/2,MAIN_H/2);
+	while (this->mWindow->isOpen())
+	{
+		Event event;
+		while (this->mWindow->pollEvent(event))
+		{
+			if (event.type == Event::Closed)this->mWindow->close();
+		}
+		this->mWindow->clear();
+
+		this->mWindow->draw(win);
+
+
+		this->mWindow->display();
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) break;
+	}
 
 
 
-	sf::Vector2f targetSize(900.0f, 1200.0f);
-
-	win.setScale(
-		targetSize.x / win.getLocalBounds().width,
-		targetSize.y / win.getLocalBounds().height);
 
 
-	this->mWindow->clear();
-	this->mWindow->draw(win);
+
+	
+
+
+
+
+
+
+
+
+
 	
 }
 void GamePlay::setup() {
@@ -164,23 +236,11 @@ void GamePlay::setup() {
 
 
 	this->Mine.loadFromFile(PathImage + "Play/Mine.png");
-	this->Win.loadFromFile(PathImage + "Play/win.png");
+	this->Win.loadFromFile(PathImage + "Play/Win.png");
 	this->Flag.loadFromFile(PathImage + "Play/Flag.png");
 
-	this->Node9.setSmooth(true);
-	this->Node0.setSmooth(true);
-	this->Node1.setSmooth(true);
-	this->Node2.setSmooth(true);
-	this->Node3.setSmooth(true);
-	this->Node4.setSmooth(true);
-	this->Node5.setSmooth(true);
-	this->Node6.setSmooth(true);
-	this->Node7.setSmooth(true);
-	this->Node8.setSmooth(true);
 
-	this->Mine.setSmooth(true);
-	this->Win.setSmooth(true);
-	this->Flag.setSmooth(true);
+	
 
 
 	for (int i = 0; i < (m+2); i++)
@@ -217,6 +277,8 @@ void GamePlay::setup() {
 					node[i][j].y = j * 32 -32;
 					node[i][j].FirstLayer.setPosition(node[i][j].x, node[i][j].y);
 					node[i][j].LastLayer.setPosition(node[i][j].x, node[i][j].y);
+					
+
 					if (node[i][j].kinds == NULL)
 					{
 						if ((i >= 1) && (i <= m) && (j >= 1) && (j <= n))
