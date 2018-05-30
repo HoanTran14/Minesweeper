@@ -177,7 +177,76 @@ void GamePlay::setup() {
 					}
 				}
 
-	
+	for (int i = 1; i <= m; i++)
+		for (int j = 1; j <= n; j++) {
+			if (node[i][j].kinds == 0) {
+				cout << i << "  " << j << endl;
+
+				node[i][j].kinds = -1;
+				countBoom++;
+				node[i][j].LastLayer.setTexture(Mine);
+				
+			}
+		}
+
+	for (int i = 1; i <= m; i++)
+		for (int j = 1; j <= n; j++)
+		{
+			node[i][j].setData(Node9);
+			node[i][j].x = i * 32 - 32;
+			node[i][j].y = j * 32 - 32;
+			node[i][j].FirstLayer.setPosition(node[i][j].x, node[i][j].y);
+			node[i][j].LastLayer.setPosition(node[i][j].x, node[i][j].y);
+
+
+			if (node[i][j].kinds != -1)
+			{
+				if ((i >= 1) && (i <= m) && (j >= 1) && (j <= n))
+				{
+					int count = 0;
+					if (node[i - 1][j].kinds == -1)count++;
+					if (node[i + 1][j].kinds == -1)count++;
+					if (node[i][j - 1].kinds == -1)count++;
+					if (node[i][j + 1].kinds == -1)count++;
+					if (node[i - 1][j - 1].kinds == -1)count++;
+					if (node[i - 1][j + 1].kinds == -1)count++;
+					if (node[i + 1][j - 1].kinds == -1)count++;
+					if (node[i + 1][j + 1].kinds == -1)count++;
+					node[i][j].kinds = count;
+					switch (node[i][j].kinds)
+					{
+					case 0:
+						node[i][j].LastLayer.setTexture(Node0);
+						break;
+					case 1:
+						node[i][j].LastLayer.setTexture(Node1);
+						break;
+					case 2:
+						node[i][j].LastLayer.setTexture(Node2);
+						break;
+					case 3:
+						node[i][j].LastLayer.setTexture(Node3);
+						break;
+					case 4:
+						node[i][j].LastLayer.setTexture(Node4);
+						break;
+					case 5:
+						node[i][j].LastLayer.setTexture(Node5);
+						break;
+					case 6:
+						node[i][j].LastLayer.setTexture(Node6);
+						break;
+					case 7:
+						node[i][j].LastLayer.setTexture(Node7);
+						break;
+					case 8:
+						node[i][j].LastLayer.setTexture(Node8);
+						break;
+					}
+				}
+			}
+		}
+
 }
 
 void GamePlay::play() {
@@ -239,7 +308,7 @@ void GamePlay::play() {
 				sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
 				int x = mouse_position.x / 32 + 1;
 				int y = mouse_position.y / 32 + 1;
-				cout << "CLick left" << x << y << endl;
+				
 				if (x <= m && y <= n && x >= 1 && y >= 1)
 				{
 					if (!node[x][y].flag)
@@ -254,7 +323,7 @@ void GamePlay::play() {
 							countLat++;
 						}
 						node[x][y].lat = true;
-						cout << "bom:" << countBoom << "   " << countLat << "   " << m*n << endl;
+						
 						if ((this->countBoom + this->countLat) == m*n) {
 
 							win();
@@ -270,7 +339,7 @@ void GamePlay::play() {
 
 			if (Mouse::isButtonPressed(Mouse::Right))
 			{
-				cout << "2222222";
+		
 				keyUp = true;
 
 
@@ -278,15 +347,15 @@ void GamePlay::play() {
 			}
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				cout << "11111";
+				
 				if (event.mouseButton.button == sf::Mouse::Right) {
-					cout << "333333333";
+					
 					if (keyUp) {
 						keyUp = false;
 						sf::Vector2i mouse_position = sf::Mouse::getPosition(*this->mWindow);
 						int x = mouse_position.x / 32 + 1;
 						int y = mouse_position.y / 32 + 1;
-						cout << "click rignht" << x << y << endl;;
+						
 						if (x <= m && y <= n && x >= 1 && y >= 1)
 						{
 							if (node[x][y].flag == false)

@@ -14,7 +14,6 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(MAIN_W, MAIN_H), "Minesweeper!",sf::Style::Close);
 	window.setFramerateLimit(30);//FPS
 	srand(time(NULL));
-	
 	Menu(window);
 	return 0;
 }
